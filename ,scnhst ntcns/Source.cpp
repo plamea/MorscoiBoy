@@ -1,511 +1,160 @@
-#include <iostream>
-
+#include <algorithm>
 #include <ctime>
-
+#include <iostream>
+#include <cstdlib>
 #include <stdbool.h>
-
 #include <vector>
-
+#include <string>
 using namespace std;
-int mask2[4][2]{
-  {
-    1,
-    0
-  }, {
-    0,
-    1
-  }, {
-    0,
-    -1
-  }, {
-    -1,
-    0
-  }
+enum colors
+{
+    BlueDark, BlueGrey2, GreenGrey, BlueGrey, RedBlack, VioletLite, BrownLite, GreyLite, Grey, Blue, Green, GreenLite, Brown, Violet, Salat, White
 };
-int field[10][10];
-int fieldd[10][10];
-int scan = 0;
-int i, j, k, h, g, ok, nook;
+const int Field = 10;
+const char Wather = '0';
+const char Ship = 'x';
+const char meam = static_cast<char>(178);
+const char Dam = static_cast<char>(176);
+const int Fieldd = 10;
+int x, y;
 vector < string > histiory;
-class Rastan {
-public:
-    int id;
-    int x, y;
-    void Ship(int id) {
-        this->id = id;
-        for (int i = 0; i <= 9; i++)
-            for (int j = 0; j <= 9; j++) {
-                field[i][j] = 0;
+bool ship
+(
+    int size,
+    bool is_horiz,
+    int row_top,
+    int col_left,
+    const char field[][Field]
+) {
+    if (is_horiz) {
+        for (int i = std::max(0, row_top - 1); i <= std::min(Field - 1, row_top + 1);
+            ++i) {
+            for (int j = std::max(0, col_left - 1); j <= std::min(Field - 1, col_left + size);
+                ++j) {
+                if (field[i][j] == Ship) return false;
             }
-
+        }
+        return true;
     }
-    int damage(int kto) {
-        if (field[x][y] == 1) {
-            cout << "попал";
-            field[x][y] = 2;
-            kto++;
-            histiory.push_back("попал");
-        } //изменить рисунок на x
-        else if (field[x][y] == 0) {
-            cout << "ћимо";
-            field[x][y] = 3;
-            histiory.push_back("мимо"); // изменить рисунок на ^
+    else {
+        for (int i = std::max(0, row_top - 1); i <= std::min(Field - 1, row_top + size);
+            ++i) {
+            for (int j = std::max(0, col_left - 1); j <= std::min(Field - 1, col_left + 1);
+                ++j) {
+                if (field[i][j] == Ship) return false;
+            }
         }
-        return kto;
+        return true;
     }
-    void scanr() {
-        h = i;
-        g = j;
-        scan = 0;
-        i += 1;
-        if(field[i][j] != 1) {
-            if (field[i][j] != 1 && i != 10) {
-                j += 1;
-                if (field[i][j] != 1 && j != 10) {
-                    i -= 1;
-                    if (field[i][j] != 1 && i != -1) {
-                        i -= 1;
-                        if (field[i][j] != 1 && i != -1) {
-                            j -= 1;
-                            if (field[i][j] != 1 && j != -1) {
-                                j -= 1;
-                                if (field[i][j] != 1 && j != -1) {
-                                    i += 1;
-                                    if (field[i][j] != 1 && i != 10) {
-                                        i += 1;
-                                        if (field[i][j] != 1 && i != 10) {
+}
 
-                                            scan = 1;
-                                            i = h;
-                                            j = g;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        else if (scan == 0) {
-            h = i;
-            g = j;
-        }
+void SetShip(int size, char field[][Field]) {
+    bool is_horiz = rand() % 2 == 0;
+    int row_top = 0;
+    int col_left = 0;
 
-    }
-    void randk() {
-        srand(time(0)); // автоматическа€ рандомизаци€"
-        k = rand() % 4;
-    }
-    /*void gto()
-    {
-      if (k == 1)
-      {
-          k = 4;
-          i -= 1;
-          if (field[i][j] == 1)
-          {
-              i += mask2[k][0];
-              j += mask2[k][1];
-              if (field[i][j] == 1)
-              {
-                  i += mask2[k][0];
-                  j += mask2[k][1];
-                  if (field[i][j] == 1)
-                  {
-                      i += mask2[k][0];
-                      j += mask2[k][1];
-                  }
-              }
-          }
-      }
-    }*/
+    do {
+        do {
+            row_top = rand() % Field;
+        } while (!is_horiz && row_top > Field - size);
 
-    void pereme() {
-        if (mask2[k][0] == -1) {
-            i = i + mask2[k][0];
-        }
-        if (mask2[k][1] == -1) {
-            j = j + mask2[k][1];
-        }
-        if (mask2[k][0] == 1) {
-            i += mask2[k][0];
-        }
-        if (mask2[k][1] == 1) {
-            j += mask2[k][1];
-        }
-        if (mask2[k][0] == 0) {
-            i += mask2[k][0];
-        }
-        if (mask2[k][1] == 0) {
-            j += mask2[k][1];
-        }
+        do {
+            col_left = rand() % Field;
+        } while (is_horiz && col_left > Field - size);
+    } while (!ship(size, is_horiz, row_top, col_left, field));
 
-        /*if (i > 9)
-        {
-            Rastan bar;
-            bar.gt1();
-        }*/
-
-    }
-    void rando() {
-        srand(time(0)); // автоматическа€ рандомизаци€
-        i = rand() % 9;
-        j = rand() % 9;
-    }
-    void proricovka() {
-        cout << "»грок" << id << ":\n";
-        cout << " Y  0  1  2  3  4  5  6  7  8  9  \n";
-        cout << "X  _____________________________\n";
-        int n = 0, m = 0;
-        for (int i = 0; i <= 9; i++) {
-            n = i;
-            cout << i << " ";
-
-            for (int j = 0; j <= 9; j++) {
-                m = j;
-                cout << "|";
-                if (field[i][j] == 0 || field[i][j] == 1) cout << " " << field[i][j];
-                else cout << " x";
-                if (m == 9) cout << "|";
-            }
-
-            if (n < 9) cout << endl;
-            else cout << "\n  ```````````````````````````````";
-        }
-
-    }
-    void toch() {
-        field[i][j] = 1;
-        while (nook > 1) {
-            if (mask2[k][0] == -1) {
-                i = i - mask2[k][0];
-            }
-            if (mask2[k][1] == -1) {
-                j = j - mask2[k][1];
-            }
-            if (mask2[k][0] == 1) {
-                i -= mask2[k][0];
-            }
-            if (mask2[k][1] == 1) {
-                j -= mask2[k][1];
-            }
-            if (mask2[k][0] == 0) {
-                i -= mask2[k][0];
-            }
-            if (mask2[k][1] == 0) {
-                j -= mask2[k][1];
-            }
-            field[i][j] = 1;
-            nook -= 1;
-        }
-
-    }
-};
-class Start {
-public:
-    int id;
-    void maino() {
-        Rastan random;
-        Rastan randomk;
-        Rastan scaner;
-        Rastan per;
-        Rastan oks;
-        this->id = id;
-        std::cout << " √енераци€ кораблей это может зан€ть до 4 минут \n";
-
-        while (ok < 1) {
-            random.rando();
-            randomk.randk();
-            nook = 0;
-            if (field[i][j] != 1) {
-                scaner.scanr();
-                if (scan == 1) {
-                    nook = 1;
-                    per.pereme();
-                    scaner.scanr();
-                    if (scan == 1) {
-                        nook = 2;
-                        per.pereme();
-                        scaner.scanr();
-                        if (scan == 1) {
-                            nook = 3;
-                            per.pereme();
-                            scaner.scanr();
-                            if (scan == 1) {
-                                nook = 4;
-                                per.pereme();
-                                scaner.scanr();
-                                oks.toch();
-                                ok = 1;
-                                nook = 0;
-                                std::cout << i << " - I  " << j << " - J  ѕервый кораблик \n";
-                            }
-                        }
-                    }
-
-                }
-            }
-        }
-        ok = 0;
-        srand(55);
-        while (ok < 1) {
-            random.rando();
-
-            randomk.randk();
-            if (field[i][j] != 1) {
-                scaner.scanr();
-                if (scan == 1) {
-                    nook = 1;
-                    per.pereme();
-                    scaner.scanr();
-                    if (scan == 1) {
-                        nook = 2;
-                        per.pereme();
-                        scaner.scanr();
-                        if (scan == 1) {
-                            nook = 3;
-                            per.pereme();
-                            scaner.scanr();
-                            oks.toch();
-                            ok = 1;
-                            std::cout << i << " - I  " << j << " - J  второй кораблик \n";
-                        }
-                    }
-
-                }
-            }
-        }
-        ok = 0;
-        srand(55);
-        while (ok < 1) {
-            random.rando();
-            randomk.randk();
-            if (field[i][j] != 1) {
-                scaner.scanr();
-                if (scan == 1) {
-                    nook = 1;
-                    per.pereme();
-                    scaner.scanr();
-                    if (scan == 1) {
-                        nook = 2;
-                        per.pereme();
-                        scaner.scanr();
-                        if (scan == 1) {
-                            nook = 3;
-                            per.pereme();
-                            scaner.scanr();
-                            oks.toch();
-                            ok = 1;
-                            std::cout << i << " - I  " << j << " - J  третий кораблик \n";
-                        }
-                    }
-
-                }
-            }
-        }
-        ok = 0;
-        srand(55);
-        while (ok < 1) {
-            random.rando();
-            randomk.randk();
-            if (field[i][j] != 1) {
-                scaner.scanr();
-                if (scan == 1) {
-                    nook = 1;
-                    per.pereme();
-                    scaner.scanr();
-                    if (scan == 1) {
-                        nook = 2;
-                        per.pereme();
-                        scaner.scanr();
-                        oks.toch();
-                        ok = 1;
-                        std::cout << i << " - I  " << j << " - J  четвЄртый кораблик \n";
-                    }
-
-                }
-            }
-        }
-        ok = 0;
-        srand(55);
-        while (ok < 1) {
-            random.rando();
-            randomk.randk();
-            if (field[i][j] != 1) {
-                scaner.scanr();
-                if (scan == 1) {
-                    nook = 1;
-                    per.pereme();
-                    scaner.scanr();
-                    if (scan == 1) {
-                        nook = 2;
-                        per.pereme();
-                        scaner.scanr();
-                        oks.toch();
-                        ok = 1;
-                        std::cout << i << " - I  " << j << " - J  п€тый кораблик \n";
-                    }
-
-                }
-            }
-        }
-        ok = 0;
-        srand(55);
-        while (ok < 1) {
-            random.rando();
-            randomk.randk();
-            if (field[i][j] != 1) {
-                scaner.scanr();
-                if (scan == 1) {
-                    nook = 1;
-                    per.pereme();
-                    scaner.scanr();
-                    if (scan == 1) {
-                        nook = 2;
-                        per.pereme();
-                        scaner.scanr();
-                        oks.toch();
-                        ok = 1;
-                        std::cout << i << " - I  " << j << " - J  шестой кораблик \n";
-                    }
-
-                }
-            }
-        }
-        ok = 0;
-        srand(55);
-        while (ok < 1) {
-            random.rando();
-
-            randomk.randk();
-            if (field[i][j] != 1) {
-                scaner.scanr();
-                if (scan == 1) {
-                    nook = 1;
-                    per.pereme();
-                    scaner.scanr();
-                    oks.toch();
-                    ok = 1;
-                    std::cout << i << " - I  " << j << " - J  седьмой кораблик \n";
-
-                }
-            }
-        }
-        ok = 0;
-        srand(55);
-        while (ok < 1) {
-            random.rando();
-
-            randomk.randk();
-            if (field[i][j] != 1) {
-                scaner.scanr();
-                if (scan == 1) {
-                    nook = 1;
-                    per.pereme();
-                    scaner.scanr();
-                    oks.toch();
-                    ok = 1;
-                    std::cout << i << " - I  " << j << " - J  восьмой кораблик \n";
-
-                }
-            }
-        }
-        ok = 0;
-        srand(55);
-        while (ok < 1) {
-            random.rando();
-
-            randomk.randk();
-            if (field[i][j] != 1) {
-                scaner.scanr();
-                if (scan == 1) {
-                    nook = 1;
-                    per.pereme();
-                    scaner.scanr();
-                    oks.toch();
-                    ok = 1;
-                    std::cout << i << " - I  " << j << " - J  дев€тый кораблик \n";
-
-                }
-            }
-        }
-        ok = 0;
-        srand(55);
-        while (ok < 1) {
-            random.rando();
-
-            randomk.randk();
-            if (field[i][j] != 1) {
-                scaner.scanr();
-                if (scan == 1) {
-                    nook = 1;
-                    per.pereme();
-                    scaner.scanr();
-                    oks.toch();
-                    ok = 1;
-                    std::cout << i << " - I  " << j << " - J  дес€тый кораблик \n";
-
-                }
-            }
-        }
-        ok = 0;
-
-    }
-};
-/*class ships {
-public:
-void kor4() {
-        if (field[i][j] != 1)
-        {
-            scaner.scanr();
-            if (scan == 0)
-            {
-                field[i][j] = 1;
-                per.pereme();
-                scaner.scanr();
-                if (scan == 0)
-                {
-                    field[i][j] = 1;
-                    per.pereme();
-                    scaner.scanr();
-                    if (scan == 0)
-                    {
-                        field[i][j] = 1;
-                        per.pereme();
-                        scaner.scanr();
-                        if (scan == 0)
-                        {
-                            field[i][j] = 1;
-                            per.pereme();
-                            scaner.scanr();
-
-                        }
-                    }
-                }
-
-            }
+    if (is_horiz) {
+        for (int j = col_left; j < col_left + size; ++j) {
+            field[row_top][j] = Ship;
         }
     }
-};
-*/
-//int argc, char *argv[]
+    else {
+        for (int i = row_top; i < row_top + size; ++i) {
+            field[i][col_left] = Ship;
+        }
+    }
+}
+
+void SetShips(char field[][Field]) {
+    for (int i = 0; i < 1; ++i) {
+        SetShip(4, field);
+    }
+
+    for (int i = 0; i < 2; ++i) {
+        SetShip(3, field);
+    }
+
+    for (int i = 0; i < 3; ++i) {
+        SetShip(2, field);
+    }
+
+    for (int i = 0; i < 4; ++i) {
+        SetShip(1, field);
+    }
+}
+void print_field(const char field[][Field]) {
+    int r = 0;
+    std::cout << " Y  0 1 2 3 4 5 6 7 8 9 \n";
+    std::cout << "X   \n";
+    for (int i = 0; i < Field; ++i) {
+        std::cout << r << "   ";
+        ++r;
+        for (int j = 0; j < Field; ++j) {
+            std::cout << field[i][j] <<
+                " ";
+            //static_cast<char>(176);
+        }
+        std::cout << std::endl;
+
+    }
+    std::cout << "\n";
+}
+void print_fieldd(const char fieldd[][Fieldd]) {
+    int r = 0;
+    std::cout << " Y  0 1 2 3 4 5 6 7 8 9 \n";
+    std::cout << "X   \n";
+    for (int i = 0; i < Fieldd; ++i) {
+        std::cout << r << "   ";
+        ++r;
+        for (int j = 0; j < Fieldd; ++j) {
+            std::cout << fieldd[i][j] <<
+                " ";
+            //static_cast<char>(176);
+        }
+        std::cout << std::endl;
+
+    }
+    std::cout << "\n";
+}
+
+void set_water(char field[][Field]) {
+    for (int i = 0; i < Field; ++i) {
+        for (int j = 0; j < Field; ++j) {
+            field[i][j] = Wather;
+        }
+    }
+}
+void set_waterr(char fieldd[][Fieldd]) {
+    for (int i = 0; i < Fieldd; ++i) {
+        for (int j = 0; j < Fieldd; ++j) {
+            fieldd[i][j] = Wather;
+        }
+    }
+}
+
 int main() {
     setlocale(LC_CTYPE, "rus");
-
-    Rastan one;
-    Rastan two;
-    Start tresh;
-
-    tresh.maino();
-    one.id = 1;
-    one.proricovka();
-    cout << "\n\n";
-
-    tresh.maino();
-    two.id = 2;
-    two.proricovka();
-
+    srand(static_cast <unsigned> (time(0)));
+    int x = 0;
+    int y = 0;
+    char field[Field][Field];
+    char fieldd[Field][Field];
+    set_water(field);
+    SetShips(field);
+    set_waterr(fieldd);
+    SetShips(fieldd);
+    print_field(field);
+    print_fieldd(fieldd);
     int kto = 1;
     for (;;) {
         int buf;
@@ -516,34 +165,47 @@ int main() {
             buf = 1;
         }
 
-        cout << "       Xодит " << buf << " игрок";
-        cout << "       x: y: ";
+        std::cout << "       Xодит " << buf << " игрок";
+        std::cout << "       x: y: ";
 
         if (kto % 2 != 0) {
-            cin >> two.x >> two.y;
-
-            kto = two.damage(kto);
-
-            kto++;
+            cin >> x >> y;
+            if (field[x][y] == 'x') {
+                std::cout << "попал";
+                field[x][y] = Dam;
+                histiory.push_back("попал");
+            }
+            else if (field[x][y] == '0') {
+                std::cout << "ћимо";
+                field[x][y] = meam;
+                kto++;
+                histiory.push_back("мимо");
+            }
 
         }
         else if (kto % 2 == 0) {
-
-            cin >> one.x >> one.y;
-            kto = one.damage(kto);
-            kto++;
+            cin >> x >> y;
+            if (fieldd[x][y] == 'x') {
+                std::cout << "попал";
+                fieldd[x][y] = Dam;
+                histiory.push_back("попал");
+            }
+            else if (fieldd[x][y] == '0') {
+                std::cout << "ћимо";
+                fieldd[x][y] = meam;
+                kto++;
+                histiory.push_back("мимо");
+            }
 
         }
 
         system("cls");
-        one.proricovka();
-        cout << "\n\n";
-        two.proricovka();
-        cout << "\n\n";
+        print_field(field);
+        std::cout << "\n\n";
+        print_fieldd(fieldd);
+        std::cout << "\n\n";
         for (auto item : histiory) {
-            cout << item << "\n";
+            std::cout << item << "\n";
         }
     }
-    system("pause");
-    return 0;
 }
