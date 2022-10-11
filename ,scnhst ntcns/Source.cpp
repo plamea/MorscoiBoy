@@ -153,7 +153,9 @@ int main() {
     SetShips(field);
     set_waterr(fieldd);
     SetShips(fieldd);
+    std::cout << "Игрок 1 \n\n";
     print_field(field);
+    std::cout << "Игрок 2 \n\n";
     print_fieldd(fieldd);
     int kto = 1;
     for (;;) {
