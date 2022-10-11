@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <vector>
 #include <string>
+#include <Windows.h>
 using namespace std;
 enum colors
 {
@@ -27,9 +28,9 @@ bool ship
     const char field[][Field]
 ) {
     if (is_horiz) {
-        for (int i = std::max(0, row_top - 1); i <= std::min(Field - 1, row_top + 1);
+        for (int i = max(0, row_top - 1); i <= min(Field - 1, row_top + 1);
             ++i) {
-            for (int j = std::max(0, col_left - 1); j <= std::min(Field - 1, col_left + size);
+            for (int j = max(0, col_left - 1); j <= min(Field - 1, col_left + size);
                 ++j) {
                 if (field[i][j] == Ship) return false;
             }
@@ -37,9 +38,9 @@ bool ship
         return true;
     }
     else {
-        for (int i = std::max(0, row_top - 1); i <= std::min(Field - 1, row_top + size);
+        for (int i = max(0, row_top - 1); i <= min(Field - 1, row_top + size);
             ++i) {
-            for (int j = std::max(0, col_left - 1); j <= std::min(Field - 1, col_left + 1);
+            for (int j = max(0, col_left - 1); j <= min(Field - 1, col_left + 1);
                 ++j) {
                 if (field[i][j] == Ship) return false;
             }
@@ -94,37 +95,37 @@ void SetShips(char field[][Field]) {
 }
 void print_field(const char field[][Field]) {
     int r = 0;
-    std::cout << " Y  0 1 2 3 4 5 6 7 8 9 \n";
-    std::cout << "X   \n";
+    cout << " Y  0 1 2 3 4 5 6 7 8 9 \n";
+    cout << "X   \n";
     for (int i = 0; i < Field; ++i) {
-        std::cout << r << "   ";
+        cout << r << "   ";
         ++r;
         for (int j = 0; j < Field; ++j) {
-            std::cout << field[i][j] <<
+            cout << field[i][j] <<
                 " ";
             //static_cast<char>(176);
         }
-        std::cout << std::endl;
+        cout << endl;
 
     }
-    std::cout << "\n";
+    cout << "\n";
 }
 void print_fieldd(const char fieldd[][Fieldd]) {
     int r = 0;
-    std::cout << " Y  0 1 2 3 4 5 6 7 8 9 \n";
-    std::cout << "X   \n";
+    cout << " Y  0 1 2 3 4 5 6 7 8 9 \n";
+    cout << "X   \n";
     for (int i = 0; i < Fieldd; ++i) {
-        std::cout << r << "   ";
+        cout << r << "   ";
         ++r;
         for (int j = 0; j < Fieldd; ++j) {
-            std::cout << fieldd[i][j] <<
+            cout << fieldd[i][j] <<
                 " ";
             //static_cast<char>(176);
         }
-        std::cout << std::endl;
+        cout << endl;
 
     }
-    std::cout << "\n";
+    cout << "\n";
 }
 
 void set_water(char field[][Field]) {
@@ -153,9 +154,9 @@ int main() {
     SetShips(field);
     set_waterr(fieldd);
     SetShips(fieldd);
-    std::cout << "Игрок 1 \n\n";
+    cout << "Игрок 1 \n\n";
     print_field(field);
-    std::cout << "Игрок 2 \n\n";
+    cout << "Игрок 2 \n\n";
     print_fieldd(fieldd);
     int kto = 1;
     for (;;) {
@@ -167,18 +168,18 @@ int main() {
             buf = 1;
         }
 
-        std::cout << "       Xодит " << buf << " игрок";
-        std::cout << "       x: y: ";
+        cout << "Xодит " << buf << " игрок";
+        cout << "   x: y: ";
 
         if (kto % 2 != 0) {
             cin >> x >> y;
             if (field[x][y] == 'x') {
-                std::cout << "попал";
+                cout << "попал";
                 field[x][y] = Dam;
                 histiory.push_back("попал");
             }
             else if (field[x][y] == '0') {
-                std::cout << "Мимо";
+                cout << "Мимо";
                 field[x][y] = meam;
                 kto++;
                 histiory.push_back("мимо");
@@ -188,12 +189,12 @@ int main() {
         else if (kto % 2 == 0) {
             cin >> x >> y;
             if (fieldd[x][y] == 'x') {
-                std::cout << "попал";
+                cout << "попал";
                 fieldd[x][y] = Dam;
                 histiory.push_back("попал");
             }
             else if (fieldd[x][y] == '0') {
-                std::cout << "Мимо";
+                cout << "Мимо";
                 fieldd[x][y] = meam;
                 kto++;
                 histiory.push_back("мимо");
@@ -203,11 +204,11 @@ int main() {
 
         system("cls");
         print_field(field);
-        std::cout << "\n\n";
+        cout << "\n\n";
         print_fieldd(fieldd);
-        std::cout << "\n\n";
+        cout << "\n\n";
         for (auto item : histiory) {
-            std::cout << item << "\n";
+            cout << item << ", ";
         }
     }
 }
