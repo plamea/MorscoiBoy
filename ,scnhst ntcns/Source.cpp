@@ -142,8 +142,60 @@ void set_waterr(char fieldd[][Fieldd]) {
         }
     }
 }
+void ktor(int kto, char field[][Field], char fieldd[][Fieldd]) {
+    x = 0;
+    y = 0;
+    cin >> x >> y;
+    if ((x == 0 || x == 1 || x == 2 || x == 3 || x == 4 || x == 5 || x == 6 || x == 7 || x == 8 || x == 9) && (y == 0 || y == 1 || y == 2 || y == 3 || y == 4 || y == 5 || y == 6 || y == 7 || y == 8 || y == 9)) {
+        if (kto % 2 != 0) {
+            if (field[x][y] == 'x') {
+                cout << "попал";
+                field[x][y] = Dam;
+                histiory.push_back("попал");
+            }
+            else if (field[x][y] == '0') {
+                cout << "Мимо";
+                field[x][y] = meam;
+                kto++;
+                histiory.push_back("мимо");
+            }
+            else {
+                x = 10;
+                y = 10;
+            }
 
-int main() {
+        }
+        else if (kto % 2 == 0) {
+
+            if (fieldd[x][y] == 'x') {
+                cout << "попал";
+                fieldd[x][y] = Dam;
+                histiory.push_back("попал");
+            }
+            else if (fieldd[x][y] == '0') {
+                cout << "Мимо";
+                fieldd[x][y] = meam;
+                kto++;
+                histiory.push_back("мимо");
+            }
+            else {
+                x = 10;
+                y = 10;
+            }
+        }
+        else {
+            x = 10;
+            y = 10;
+        }
+        
+    }
+    else {
+        x = 10;
+        y = 10;
+    }
+    cin.clear();
+}
+void mains() {
     setlocale(LC_CTYPE, "rus");
     srand(static_cast <unsigned> (time(0)));
     int x = 0;
@@ -171,36 +223,7 @@ int main() {
         cout << "Xодит " << buf << " игрок";
         cout << "   x: y: ";
 
-        if (kto % 2 != 0) {
-            cin >> x >> y;
-            if (field[x][y] == 'x') {
-                cout << "попал";
-                field[x][y] = Dam;
-                histiory.push_back("попал");
-            }
-            else if (field[x][y] == '0') {
-                cout << "Мимо";
-                field[x][y] = meam;
-                kto++;
-                histiory.push_back("мимо");
-            }
-
-        }
-        else if (kto % 2 == 0) {
-            cin >> x >> y;
-            if (fieldd[x][y] == 'x') {
-                cout << "попал";
-                fieldd[x][y] = Dam;
-                histiory.push_back("попал");
-            }
-            else if (fieldd[x][y] == '0') {
-                cout << "Мимо";
-                fieldd[x][y] = meam;
-                kto++;
-                histiory.push_back("мимо");
-            }
-
-        }
+        ktor(kto, field, fieldd);
 
         system("cls");
         print_field(field);
@@ -211,4 +234,8 @@ int main() {
             cout << item << ", ";
         }
     }
+}
+int main() {
+    setlocale(LC_CTYPE, "rus");
+    mains();
 }
